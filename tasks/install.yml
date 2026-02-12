@@ -85,17 +85,27 @@
         force: "yes"
       register: hydrogen_git_pull_results
 
+    - name: Check if Hydrogen container image exists to avoid recreating the same one
+      ansible.builtin.command: "{{ devture_systemd_docker_base_host_command_docker }} images --quiet --filter 'reference={{ hydrogen_container_image }}'"
+      register: hydrogen_container_image_check_result
+      changed_when: false
+
+    # Invoking the `docker build` command here, instead of calling the `docker_image` Ansible module,
+    # because the latter does not support BuildKit.
+    # See: https://github.com/ansible-collections/community.general/issues/514
     - name: Ensure Hydrogen container image is built
-      community.docker.docker_image:
-        name: "{{ hydrogen_container_image_self_build_name }}"
-        source: build
-        force_source: "{{ hydrogen_git_pull_results.changed if ansible_version.major > 2 or ansible_version.minor >= 8 else omit }}"
-        force: "{{ omit if ansible_version.major > 2 or ansible_version.minor >= 8 else hydrogen_git_pull_results.changed }}"
-        build:
-          dockerfile: Dockerfile
-          path: "{{ hydrogen_container_image_self_build_src_files_path }}"
-          pull: true
-          args:
+      ansible.builtin.shell:
+        chdir: "{{ hydrogen_container_image_self_build_src_files_path }}"
+        cmd: |
+          {{ devture_systemd_docker_base_host_command_docker }} build \
+          -t "{{ hydrogen_container_image_self_build_name }}" \
+          -f Dockerfile \
+          .
+      environment:
+        DOCKER_BUILDKIT: "1"
+      register: result
+      changed_when: "'Successfully built' in result.stdout or ('writing image' in result.stderr and 'CACHED' not in result.stderr)"
+      when: "hydrogen_git_pull_results.changed | bool or hydrogen_container_image_check_result.stdout == ''"
 
 - name: Ensure Hydrogen container network is created via community.docker.docker_network
   when: devture_systemd_docker_base_container_network_creation_method == 'ansible-module'
