@@ -1,11 +1,12 @@
 {
-  "defaultHomeserver": {{ hydrogen_config_defaultHomeserver | to_json }},
-  "homeserverList": {{ hydrogen_config_homeserverList | to_json }},
-  "allowCustomHomeservers": {{ hydrogen_config_allowCustomHomeservers | to_json }},
-  "featuredCommunities": {
-    "spaces": {{ hydrogen_config_featuredCommunities_spaces | to_json }},
-    "rooms": {{ hydrogen_config_featuredCommunities_rooms | to_json }},
-    "servers": {{ hydrogen_config_featuredCommunities_servers | to_json }},
-    "openAsDefault": {{ hydrogen_config_featuredCommunities_openAsDefault | to_json }}
-  }
+	"push": {{ hydrogen_push | to_json }},
+	"defaultHomeServer": {{ hydrogen_default_hs_url | string | to_json }},
+	"bugReportEndpointUrl": {{ hydrogen_bugReportEndpointUrl | to_json }},
+	"themeManifests": [
+		"{{ '' if hydrogen_path_prefix == '/' else hydrogen_path_prefix }}/assets/theme-element.json"
+	],
+	"defaultTheme": {
+		"light": "element-light",
+		"dark": "element-dark"
+	}
 }

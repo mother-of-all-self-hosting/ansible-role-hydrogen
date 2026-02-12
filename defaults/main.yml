@@ -1,8 +1,11 @@
+# SPDX-FileCopyrightText: 2021, 2022 Aaron Raimist
+# SPDX-FileCopyrightText: 2021, 2022 MDAD project contributors
+# SPDX-FileCopyrightText: 2021-2025 Slavi Pantaleev
 # SPDX-FileCopyrightText: 2022 László Várady
-# SPDX-FileCopyrightText: 2022 MDAD project contributors
 # SPDX-FileCopyrightText: 2022 Marko Weltzer
+# SPDX-FileCopyrightText: 2022 Matthew Cengia
 # SPDX-FileCopyrightText: 2022-2024 Nikita Chernyi
-# SPDX-FileCopyrightText: 2022-2025 Slavi Pantaleev
+# SPDX-FileCopyrightText: 2023 Pierre 'McFly' Marty
 # SPDX-FileCopyrightText: 2023 Samuel Meenzen
 # SPDX-FileCopyrightText: 2023-2025 MASH project contributors
 # SPDX-FileCopyrightText: 2024 Julian-Samuel Gebühr
@@ -205,26 +208,12 @@ hydrogen_default_hs_url: ""
 # Controls whether the Hydrogen access log is enabled
 hydrogen_access_log_enabled: true
 
-# Controls the `defaultHomeserver` value in the `config.json` file.
-hydrogen_config_defaultHomeserver: 0  # noqa var-naming
-
-# Controls the `homeserverList` value in the `config.json` file.
-hydrogen_config_homeserverList: "{{ [hydrogen_default_hs_url] }}"  # noqa var-naming
-
-# Controls the `allowCustomHomeservers` value in the `config.json` file.
-hydrogen_config_allowCustomHomeservers: true  # noqa var-naming
-
-# Controls the `featuredCommunities.spaces` value in the `config.json` file.
-hydrogen_config_featuredCommunities_spaces: []  # noqa var-naming
-
-# Controls the `featuredCommunities.rooms` value in the `config.json` file.
-hydrogen_config_featuredCommunities_rooms: []  # noqa var-naming
-
-# Controls the `featuredCommunities.servers` value in the `config.json` file.
-hydrogen_config_featuredCommunities_servers: ["matrix.org"]  # noqa var-naming
-
-# Controls the `featuredCommunities.openAsDefault` value in the `config.json` file.
-hydrogen_config_featuredCommunities_openAsDefault: false  # noqa var-naming
+# config.json
+hydrogen_push:
+  appId: io.element.hydrogen.web
+  gatewayUrl: https://matrix.org
+  applicationServerKey: "BC-gpSdVHEXhvHSHS0AzzWrQoukv2BE7KzpoPO_FfPacqOo3l1pdqz7rSgmB04pZCWaHPz7XRe6fjLaC-WPDopM"
+hydrogen_bugReportEndpointUrl: "https://element.io/bugreports/submit"  # noqa var-naming
 
 # Default Hydrogen configuration template which covers the generic use case.
 # You can customize it by controlling the various variables inside it.
@@ -243,6 +232,18 @@ hydrogen_configuration_default: "{{ lookup('template', 'templates/config.json.j2
 #
 # If you need something more special, you can take full control by
 # completely redefining `hydrogen_configuration_default`.
+#
+# Example configuration extension follows:
+#
+# hydrogen_configuration_extension_json: |
+#  {
+#    "push": {
+#      "appId": "io.element.hydrogen.web",
+#      "gatewayUrl": "https://matrix.org",
+#      "applicationServerKey": "BC-gpSdVHEXhvHSHS0AzzWrQoukv2BE7KzpoPO_FfPacqOo3l1pdqz7rSgmB04pZCWaHPz7XRe6fjLaC-WPDopM"
+#    },
+#    "defaultHomeServer": "matrix.org"
+#  }
 hydrogen_configuration_extension_json: '{}'
 
 hydrogen_configuration_extension: "{{ hydrogen_configuration_extension_json | from_json if hydrogen_configuration_extension_json | from_json is mapping else {} }}"
