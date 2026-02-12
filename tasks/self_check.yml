@@ -6,26 +6,26 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 ---
-- name: Set fact for Cinny public endpoint
+- name: Set fact for Hydrogen public endpoint
   ansible.builtin.set_fact:
-    cinny_url_endpoint_public: "{{ cinny_scheme }}://{{ cinny_hostname }}{{ cinny_path_prefix }}/config.json"
+    hydrogen_url_endpoint_public: "{{ hydrogen_scheme }}://{{ hydrogen_hostname }}{{ hydrogen_path_prefix }}/config.json"
 
-- name: Check Cinny
+- name: Check Hydrogen
   ansible.builtin.uri:
-    url: "{{ cinny_url_endpoint_public }}"
+    url: "{{ hydrogen_url_endpoint_public }}"
     follow_redirects: none
-    validate_certs: "{{ cinny_self_check_validate_certificates }}"
-  register: cinny_self_check_result
+    validate_certs: "{{ hydrogen_self_check_validate_certificates }}"
+  register: hydrogen_self_check_result
   check_mode: false
   ignore_errors: true
   delegate_to: 127.0.0.1
   become: false
 
-- name: Fail if Cinny not working
+- name: Fail if Hydrogen not working
   ansible.builtin.fail:
-    msg: "Failed checking Cinny is up at `{{ cinny_hostname }}` (checked endpoint: `{{ cinny_url_endpoint_public }}`). Is Cinny running? Is port 443 open in your firewall? Full error: {{ cinny_self_check_result }}"
-  when: "cinny_self_check_result.failed or 'json' not in cinny_self_check_result"
+    msg: "Failed checking Hydrogen is up at `{{ hydrogen_hostname }}` (checked endpoint: `{{ hydrogen_url_endpoint_public }}`). Is Hydrogen running? Is port 443 open in your firewall? Full error: {{ hydrogen_self_check_result }}"
+  when: "hydrogen_self_check_result.failed or 'json' not in hydrogen_self_check_result"
 
-- name: Report working Cinny
+- name: Report working Hydrogen
   ansible.builtin.debug:
-    msg: "Cinny at `{{ cinny_hostname }}` is working (checked endpoint: `{{ cinny_url_endpoint_public }}`)"
+    msg: "Hydrogen at `{{ hydrogen_hostname }}` is working (checked endpoint: `{{ hydrogen_url_endpoint_public }}`)"

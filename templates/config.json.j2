@@ -1,11 +1,11 @@
 {
-  "defaultHomeserver": {{ cinny_config_defaultHomeserver | to_json }},
-  "homeserverList": {{ cinny_config_homeserverList | to_json }},
-  "allowCustomHomeservers": {{ cinny_config_allowCustomHomeservers | to_json }},
+  "defaultHomeserver": {{ hydrogen_config_defaultHomeserver | to_json }},
+  "homeserverList": {{ hydrogen_config_homeserverList | to_json }},
+  "allowCustomHomeservers": {{ hydrogen_config_allowCustomHomeservers | to_json }},
   "featuredCommunities": {
-    "spaces": {{ cinny_config_featuredCommunities_spaces | to_json }},
-    "rooms": {{ cinny_config_featuredCommunities_rooms | to_json }},
-    "servers": {{ cinny_config_featuredCommunities_servers | to_json }},
-    "openAsDefault": {{ cinny_config_featuredCommunities_openAsDefault | to_json }}
+    "spaces": {{ hydrogen_config_featuredCommunities_spaces | to_json }},
+    "rooms": {{ hydrogen_config_featuredCommunities_rooms | to_json }},
+    "servers": {{ hydrogen_config_featuredCommunities_servers | to_json }},
+    "openAsDefault": {{ hydrogen_config_featuredCommunities_openAsDefault | to_json }}
   }
 }

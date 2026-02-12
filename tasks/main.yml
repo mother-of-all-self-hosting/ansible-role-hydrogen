@@ -4,32 +4,32 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 ---
-- name: Perform Cinny installation tasks
-  when: cinny_enabled | bool
+- name: Perform Hydrogen installation tasks
+  when: hydrogen_enabled | bool
   tags:
     - setup-all
-    - setup-cinny
+    - setup-hydrogen
     - install-all
-    - install-cinny
+    - install-hydrogen
   block:
-    - name: Validate Cinny configuration
+    - name: Validate Hydrogen configuration
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/validate_config.yml"
-    - name: Install Cinny
+    - name: Install Hydrogen
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/install.yml"
 
-- name: Perform Cinny self-check tasks
-  when: cinny_enabled | bool
+- name: Perform Hydrogen self-check tasks
+  when: hydrogen_enabled | bool
   tags:
-    - self-check-cinny
+    - self-check-hydrogen
   block:
-    - name: Run self-check for Cinny
+    - name: Run self-check for Hydrogen
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/self_check.yml"
 
-- name: Perform Cinny uninstallation tasks
-  when: not cinny_enabled | bool
+- name: Perform Hydrogen uninstallation tasks
+  when: not hydrogen_enabled | bool
   tags:
     - setup-all
-    - setup-cinny
+    - setup-hydrogen
   block:
-    - name: Uninstall Cinny
+    - name: Uninstall Hydrogen
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/uninstall.yml"
