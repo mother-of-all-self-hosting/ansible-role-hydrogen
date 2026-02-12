@@ -61,8 +61,6 @@ hydrogen_hostname: "example.com"
 
 After adjusting the hostname, make sure to adjust your DNS records to point the domain to your server.
 
-**Note**: hosting Hydrogen under a subpath (by configuring the `hydrogen_path_prefix` variable) does not seem to be possible due to Hydrogen's technical limitations.
-
 ### Set the default homeserver URL
 
 It is also necessary to specify the default homeserver's URL by adding the following configuration to your `vars.yml` file:

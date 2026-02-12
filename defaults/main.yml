@@ -37,9 +37,6 @@ hydrogen_hostname: ""
 
 # The path at which Hydrogen is served.
 # This value must either be `/` or not end with a slash (e.g. `/hydrogen`).
-#
-# Hosting Hydrogen under a subpath does not seem to be possible due to Hydrogen's
-# technical limitations.
 hydrogen_path_prefix: /
 
 hydrogen_container_image: "{{ hydrogen_container_image_registry_prefix }}element-hq/hydrogen-web:{{ hydrogen_container_image_tag }}"
