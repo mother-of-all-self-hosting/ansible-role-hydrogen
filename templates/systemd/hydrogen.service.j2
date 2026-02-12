@@ -38,7 +38,7 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
       --env-file={{ hydrogen_base_path }}/env \
       --label-file={{ hydrogen_base_path }}/labels \
       --mount type=bind,src={{ hydrogen_config_path }}/nginx.conf,dst=/etc/nginx/nginx.conf,ro \
-      --mount type=bind,src={{ hydrogen_config_path }}/config.json,dst=/app/config.json,ro \
+      --mount type=bind,src={{ hydrogen_config_path }}/config.json,dst=/config.json.bundled,ro \
       {% for volume in hydrogen_container_additional_volumes %}
       --mount type={{ volume.type | default('bind' if '/' in volume.src else 'volume') }},src={{ volume.src }},dst={{ volume.dst }}{{ (',' + volume.options) if volume.options else '' }} \
       {% endfor %}
