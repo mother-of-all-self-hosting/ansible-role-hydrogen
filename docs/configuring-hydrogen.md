@@ -20,11 +20,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Setting up Hydrogen
 
-This is an [Ansible](https://www.ansible.com/) role which installs [Hydrogen](https://github.com/ajbura/hydrogen) to run as a [Docker](https://www.docker.com/) container wrapped in a systemd service.
+This is an [Ansible](https://www.ansible.com/) role which installs [Hydrogen](https://github.com/element-hq/hydrogen-web) to run as a [Docker](https://www.docker.com/) container wrapped in a systemd service.
 
-Hydrogen is a web client for [Matrix](https://matrix.org/), realtime communication (chat) network. It focuses primarily on simple, elegant and secure interface.
+Hydrogen is a lightweight web client for [Matrix](https://matrix.org/), realtime communication (chat) network, with legacy and mobile browser support.
 
-See the project's [documentation](https://github.com/hydrogenapp/hydrogen/blob/dev/README.md) to learn what Hydrogen does and why it might be useful to you.
+See the project's [documentation](https://github.com/element-hq/hydrogen-web/blob/master/README.md) to learn what Hydrogen does and why it might be useful to you.
 
 >[!NOTE]
 > This role merely enables you to set up the client; To communicate with other people on the Matrix network you need to prepare a Matrix homeserver which this client can connect to. While it is still possible to use a public homeserver with the Hydrogen instance, [this "matrix-docker-ansible-deploy" Ansible playbook](https://github.com/spantaleev/matrix-docker-ansible-deploy/) lets you set up Matrix services from the core ones such as a homeserver to other goodies like "bridges" on your server — it is pretty complete and well maintained.
