@@ -103,8 +103,8 @@
           .
       environment:
         DOCKER_BUILDKIT: "1"
-      register: result
-      changed_when: "'Successfully built' in result.stdout or ('writing image' in result.stderr and 'CACHED' not in result.stderr)"
+      register: hydrogen_container_image_build_result
+      changed_when: "'Successfully built' in hydrogen_container_image_build_result.stdout or ('writing image' in hydrogen_container_image_build_result.stderr and 'CACHED' not in hydrogen_container_image_build_result.stderr)"
       when: "hydrogen_git_pull_results.changed | bool or hydrogen_container_image_check_result.stdout == ''"
 
 - name: Ensure Hydrogen container network is created via community.docker.docker_network
