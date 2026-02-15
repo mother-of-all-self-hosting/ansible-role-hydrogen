@@ -33,7 +33,7 @@ See the project's [documentation](https://github.com/element-hq/hydrogen-web/blo
 
 To enable Hydrogen with this role, add the following configuration to your `vars.yml` file.
 
-**Note**: the path should be something like `inventory/host_vars/mdad.example.com/vars.yml` if you use the [MDAD Ansible playbook](https://github.com/spantaleev/matrix-docker-ansible-deploy).
+**Note**: the path should be something like `inventory/host_vars/matrix.example.com/vars.yml` if you use the [MDAD Ansible playbook](https://github.com/spantaleev/matrix-docker-ansible-deploy).
 
 ```yaml
 ########################################################################
