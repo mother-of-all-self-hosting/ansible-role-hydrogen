@@ -27,6 +27,10 @@ provisioner:
   inventory:
     group_vars:
       all:
+        # Helper variables
+        hydrogen_debug_service_enabled: false
+
+        # Variables for Hydrogen
         hydrogen_uid: 1000
         hydrogen_gid: 1000
         hydrogen_hostname: hydrogen

@@ -23,6 +23,12 @@
         fail_msg: "hydrogen.service not active ({{ hydrogen_service.status.ActiveState }})"
         success_msg: "hydrogen.service is active"
 
+    - name: Retrieve Hydrogen service log for debugging
+      when: hydrogen_debug_service_enabled | bool
+      ansible.builtin.command:
+        cmd: journalctl -xeu hydrogen.service
+      changed_when: false
+
     - name: Wait for Hydrogen HTTP endpoint to respond (up to 10m)
       ansible.builtin.uri:
         url: "http://localhost:8080/"
