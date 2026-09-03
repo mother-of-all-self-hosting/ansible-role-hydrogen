@@ -95,14 +95,11 @@
     # `docker-publish` workflow rather than by the Dockerfile, so it holds for
     # the published image this scenario uses but would not for a self-built
     # one. The bundle check further below does not have that limitation.
-    - name: Assert the Hydrogen image is the version the role pins
+    - name: Assert the running Hydrogen is the version this role installs
       ansible.builtin.assert:
         that: hydrogen_container.Config.Labels['org.opencontainers.image.version'] == hydrogen_defaults.hydrogen_version
-        fail_msg: >-
-          The running image is labelled
-          {{ hydrogen_container.Config.Labels['org.opencontainers.image.version'] | default('(no version label)') }},
-          expected {{ hydrogen_defaults.hydrogen_version }}
-        success_msg: "The running image is labelled {{ hydrogen_defaults.hydrogen_version }}"
+        fail_msg: "Hydrogen reports {{ hydrogen_container.Config.Labels['org.opencontainers.image.version'] | default('none') }}, expected {{ hydrogen_defaults.hydrogen_version }}"
+        success_msg: "Hydrogen reports {{ hydrogen_container.Config.Labels['org.opencontainers.image.version'] }}"
 
     # ------------------------------------------------------------------
     # What the role's nginx configuration serves
@@ -289,15 +286,13 @@
       register: hydrogen_bundle_version
       changed_when: false
 
-    - name: Assert the running Hydrogen is the version the role pins
+    - name: Assert the running Hydrogen is the version this role installs
       ansible.builtin.assert:
         that:
           - hydrogen_bundle_version.stdout_lines | length > 0
           - hydrogen_defaults.hydrogen_version in hydrogen_bundle_version.stdout.split()
-        fail_msg: >-
-          The running Hydrogen reports version(s) {{ hydrogen_bundle_version.stdout | default('(none found)') }},
-          expected {{ hydrogen_defaults.hydrogen_version }} from defaults/main.yml
-        success_msg: "The running Hydrogen reports {{ hydrogen_defaults.hydrogen_version }}, the version defaults/main.yml pins"
+        fail_msg: "Hydrogen reports {{ hydrogen_bundle_version.stdout | default('none') }}, expected {{ hydrogen_defaults.hydrogen_version }}"
+        success_msg: "Hydrogen reports {{ hydrogen_bundle_version.stdout }}"
 
     - name: Remove the downloaded Hydrogen application bundle
       ansible.builtin.file:
