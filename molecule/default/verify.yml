@@ -304,12 +304,12 @@
         path: "{{ hydrogen_molecule_bundle_path }}"
         state: absent
 
-    - name: Show Hydrogen verification summary
+    - name: Show the Hydrogen verification summary
       ansible.builtin.debug:
         msg:
           - "Hydrogen systemd: {{ hydrogen_service.status.ActiveState }}"
+          - "Hydrogen version: {{ hydrogen_bundle_version.stdout }}"
           - "Hydrogen container user: {{ hydrogen_container.Config.User }}"
-          - "Hydrogen running version: {{ hydrogen_bundle_version.stdout }}"
           - "Hydrogen page size: {{ hydrogen_index.content | length }} bytes"
           - "Hydrogen bundle: {{ hydrogen_bundle_path }} ({{ hydrogen_bundle_download.size | default('unknown') }} bytes)"
           - "Hydrogen homeserver served: {{ hydrogen_served_config.json.defaultHomeServer }}"
