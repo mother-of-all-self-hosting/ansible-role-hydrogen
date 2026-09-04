@@ -15,13 +15,10 @@
     hydrogen_molecule_bundle_path: /tmp/hydrogen-molecule-bundle.js
 
   tasks:
-    # Role defaults are not in scope in a verification playbook, but the
-    # Hydrogen version that Renovate bumps lives in them and is what the
-    # running application is checked against below. `include_vars` does not
-    # template, so only values that are literals in the file can be read this
-    # way - `hydrogen_version` is one, `hydrogen_container_image` (which is
-    # built out of it with Jinja) is not.
-    - name: Load the Hydrogen role defaults
+    # The role is not included in this playbook, so its defaults are not in
+    # scope. Reading defaults/main.yml directly ties the version assertion
+    # below.
+    - name: Load the role defaults
       ansible.builtin.include_vars:
         file: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/defaults/main.yml"
         name: hydrogen_defaults
