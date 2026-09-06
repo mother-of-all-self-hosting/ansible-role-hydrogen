@@ -53,12 +53,12 @@
           - docker
           - inspect
           - hydrogen
-      register: hydrogen_container_inspect
+      register: hydrogen_container_raw
       changed_when: false
 
     - name: Parse the Hydrogen container inspection
       ansible.builtin.set_fact:
-        hydrogen_container: "{{ (hydrogen_container_inspect.stdout | from_json)[0] }}"
+        hydrogen_container: "{{ (hydrogen_container_raw.stdout | from_json)[0] }}"
 
     # The systemd unit is what turns the role's variables into `docker create`
     # arguments. Reading them back off the running container is what proves the
