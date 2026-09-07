@@ -60,6 +60,17 @@
       ansible.builtin.set_fact:
         hydrogen_container: "{{ (hydrogen_container_raw.stdout | from_json)[0] }}"
 
+    # A pulled image carries the version in an OCI label, which is the cheapest
+    # statement of what is running. The label is attached by Hydrogen's
+    # `docker-publish` workflow rather than by the Dockerfile, so it holds for
+    # the published image this scenario uses but would not for a self-built
+    # one. The bundle check further below does not have that limitation.
+    - name: Assert the running Hydrogen is the version this role installs
+      ansible.builtin.assert:
+        that: hydrogen_container.Config.Labels['org.opencontainers.image.version'] == hydrogen_defaults.hydrogen_version
+        fail_msg: "Hydrogen reports {{ hydrogen_container.Config.Labels['org.opencontainers.image.version'] | default('none') }}, expected {{ hydrogen_defaults.hydrogen_version }}"
+        success_msg: "Hydrogen reports {{ hydrogen_container.Config.Labels['org.opencontainers.image.version'] }}"
+
     # The systemd unit is what turns the role's variables into `docker create`
     # arguments. Reading them back off the running container is what proves the
     # values in the inventory reached the process, rather than merely having
@@ -86,17 +97,6 @@
           read-only={{ hydrogen_container.HostConfig.ReadonlyRootfs }},
           dropped={{ hydrogen_container.HostConfig.CapDrop }})
         success_msg: "The Hydrogen container runs read-only with all capabilities dropped"
-
-    # A pulled image carries the version in an OCI label, which is the cheapest
-    # statement of what is running. The label is attached by Hydrogen's
-    # `docker-publish` workflow rather than by the Dockerfile, so it holds for
-    # the published image this scenario uses but would not for a self-built
-    # one. The bundle check further below does not have that limitation.
-    - name: Assert the running Hydrogen is the version this role installs
-      ansible.builtin.assert:
-        that: hydrogen_container.Config.Labels['org.opencontainers.image.version'] == hydrogen_defaults.hydrogen_version
-        fail_msg: "Hydrogen reports {{ hydrogen_container.Config.Labels['org.opencontainers.image.version'] | default('none') }}, expected {{ hydrogen_defaults.hydrogen_version }}"
-        success_msg: "Hydrogen reports {{ hydrogen_container.Config.Labels['org.opencontainers.image.version'] }}"
 
     # ------------------------------------------------------------------
     # What the role's nginx configuration serves
