@@ -46,7 +46,7 @@
     - name: Retrieve the Hydrogen systemd service log for debugging
       when: hydrogen_debug_service_enabled | bool
       ansible.builtin.command:
-        cmd: journalctl -xeu hydrogen.service
+        cmd: journalctl --no-pager --output=cat --unit=hydrogen.service
       changed_when: false
 
     # ------------------------------------------------------------------
