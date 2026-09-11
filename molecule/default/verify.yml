@@ -14,6 +14,9 @@
     hydrogen_molecule_base_url: "http://127.0.0.1:{{ hydrogen_molecule_http_bind_port }}"
     hydrogen_molecule_bundle_path: /tmp/hydrogen-molecule-bundle.js
 
+    hydrogen_verify_units:
+      - hydrogen.service
+
   tasks:
     - name: Verify that Hydrogen works
       block:
@@ -25,13 +28,14 @@
             file: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/defaults/main.yml"
             name: hydrogen_defaults
 
-        - name: Wait for the Hydrogen systemd service to become active (up to 180s)
+        - name: Wait for the Hydrogen systemd services to become active (up to 180s each)
           ansible.builtin.systemd_service:
-            name: hydrogen.service
-          register: hydrogen_service
-          until: hydrogen_service.status.ActiveState == 'active'
+            name: "{{ item }}"
+          register: hydrogen_services
+          until: hydrogen_services.status.ActiveState == 'active'
           retries: 36
           delay: 5
+          loop: "{{ hydrogen_verify_units }}"
           # So that giving up is reported by the assertion below rather than as a
           # wall of systemd unit properties.
           failed_when: false
@@ -39,17 +43,20 @@
         # `Restart=always` in the systemd unit means that even a container which crashes
         # and gets restarted reads as active here, so this is a precondition rather than
         # a result.
-        - name: Assert the Hydrogen systemd service is active
+        - name: Assert the Hydrogen systemd services are active
           ansible.builtin.assert:
-            that: hydrogen_service.status.ActiveState == 'active'
-            fail_msg: "hydrogen.service is not active ({{ hydrogen_service.status.ActiveState }})"
-            success_msg: "hydrogen.service is active"
+            that: hydrogen_services.results | map(attribute='status.ActiveState') | unique | list == ['active']
+            fail_msg: >-
+              Not every service is active:
+              {{ dict(hydrogen_verify_units | zip(hydrogen_services.results | map(attribute='status.ActiveState'))) }}
+            success_msg: "Every systemd service is active"
 
-        - name: Retrieve the Hydrogen systemd service log for debugging
+        - name: Retrieve the Hydrogen systemd services log for debugging
           when: hydrogen_debug_service_enabled | bool
           ansible.builtin.command:
-            cmd: journalctl --no-pager --output=cat --unit=hydrogen.service
+            cmd: "journalctl --no-pager --output=cat --unit={{ item }}"
           changed_when: false
+          loop: "{{ hydrogen_verify_units }}"
 
         # ------------------------------------------------------------------
         # The container the role actually started
@@ -304,7 +311,7 @@
         - name: Show the Hydrogen verification summary
           ansible.builtin.debug:
             msg:
-              - "Hydrogen systemd: {{ hydrogen_service.status.ActiveState }}"
+              - "Hydrogen systemd: {% for unit, state in hydrogen_verify_units | zip(hydrogen_services.results | map(attribute='status.ActiveState')) %}{{ unit }} ({{ state }}){% if not loop.last %}, {% endif %}{% endfor %}"
               - "Hydrogen version: {{ hydrogen_bundle_version.stdout }}"
               - "Hydrogen container user: {{ hydrogen_container.Config.User }}"
               - "Hydrogen page size: {{ hydrogen_index.content | length }} bytes"
