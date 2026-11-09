@@ -15,7 +15,7 @@ traefik.docker.network={{ hydrogen_container_labels_traefik_docker_network }}
 {% set middlewares = [] %}
 
 {% if hydrogen_container_labels_traefik_path_prefix != '/' %}
-traefik.http.middlewares.{{ hydrogen_identifier }}-slashless-redirect.redirectregex.regex=^({{ hydrogen_container_labels_traefik_path_prefix | quote }})$
+traefik.http.middlewares.{{ hydrogen_identifier }}-slashless-redirect.redirectregex.regex=^(https?://[^/]+{{ hydrogen_container_labels_traefik_path_prefix | regex_escape }})$
 traefik.http.middlewares.{{ hydrogen_identifier }}-slashless-redirect.redirectregex.replacement=${1}/
 {% set middlewares = middlewares + [hydrogen_identifier + '-slashless-redirect'] %}
 {% endif %}
