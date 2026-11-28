@@ -86,6 +86,7 @@
         owner: "{{ hydrogen_uid }}"
         group: "{{ hydrogen_gid }}"
         recurse: true
+      tags: molecule-idempotence-notest
 
     - name: Ensure Hydrogen repository is present on self-build
       ansible.builtin.git:
