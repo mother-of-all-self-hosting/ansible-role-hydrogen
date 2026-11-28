@@ -42,6 +42,7 @@
               {{ hydrogen_container_network }}
           register: hydrogen_network_deletion_result
           changed_when: hydrogen_container_network in hydrogen_network_deletion_result.stdout
+          failed_when: hydrogen_network_deletion_result.rc != 0 and 'not found' not in hydrogen_network_deletion_result.stderr
 
     - name: Ensure Hydrogen path does not exist
       ansible.builtin.file:
